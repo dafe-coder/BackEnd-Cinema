@@ -12,6 +12,7 @@ export class ActorService {
 
 	async bySlug(slug: string): Promise<Actor> {
 		const actor = await this.ActorModel.findOne({ slug })
+
 		if (!actor) {
 			throw new NotFoundException('Actor not found')
 		}
@@ -34,9 +35,29 @@ export class ActorService {
 		}
 		// Aggregation
 
-		return await this.ActorModel.find(options)
-			.select('-__v -updatedAt')
-			.sort({ createdAt: 'descending' })
+		return await this.ActorModel.aggregate()
+			.match(options)
+			.addFields({
+				convertedId: { $toString: '$_id' },
+			})
+			.lookup({
+				from: 'movies',
+				localField: 'convertedId',
+				foreignField: 'actors',
+				as: 'movies',
+			})
+			.addFields({
+				countMovies: {
+					$size: '$movies',
+				},
+			})
+			.project({
+				__v: 0,
+				updatedAt: 0,
+				movies: 0,
+				convertedId: 0,
+			})
+			.sort({ createdAt: -1 })
 			.exec()
 	}
 

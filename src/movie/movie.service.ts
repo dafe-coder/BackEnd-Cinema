@@ -34,6 +34,7 @@ export class MovieService {
 		const movie = await this.MovieModel.findOne({ slug })
 			.populate('actors genres')
 			.exec()
+
 		if (!movie) {
 			throw new NotFoundException('Movie not found')
 		}
