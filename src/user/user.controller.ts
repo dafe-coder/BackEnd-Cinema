@@ -16,6 +16,7 @@ import { User } from './decorators/user.decorator'
 import { UpdateUserDto } from './dto/updateUser.dto'
 import { IdValidationPipe } from 'src/pipes/idValidation.pipe'
 import { User as UserM } from './user.model'
+import { Schema, Types } from 'mongoose'
 
 @Controller('users')
 export class UserController {
@@ -31,6 +32,22 @@ export class UserController {
 	@Auth('admin')
 	async getCount(): Promise<number> {
 		return await this.UserService.getCount()
+	}
+
+	@Get('profile/favorites')
+	@Auth()
+	async getFavorites(@User('_id') userID: Types.ObjectId): Promise<any> {
+		return await this.UserService.getFavorites(userID)
+	}
+
+	@Put('profile/favorites/:id')
+	@HttpCode(200)
+	@Auth()
+	async toggleFavorites(
+		@Param('id') movieID: Types.ObjectId,
+		@User() user: UserM
+	): Promise<any> {
+		return await this.UserService.toggleFavorite(movieID, user)
 	}
 
 	@Get()
