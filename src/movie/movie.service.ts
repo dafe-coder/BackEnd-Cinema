@@ -78,8 +78,9 @@ export class MovieService {
 
 	async byGenres({ genreIDs }: GenresDto): Promise<Movie[]> {
 		const movies = await this.MovieModel.find({
-			genres: { $in: genreIDs },
+			genres: { $in: String(genreIDs) },
 		}).exec()
+
 		if (!movies) {
 			throw new NotFoundException('Movies  not found')
 		}
