@@ -4,11 +4,13 @@ import { Movie } from './movie.model'
 import { Model, Types } from 'mongoose'
 import { UpdateMovieDto } from './dto/updateMovie.dto'
 import { GenresDto } from './dto/genres.dto'
+import { TelegramService } from 'src/telegram/telegram.service'
 
 @Injectable()
 export class MovieService {
 	constructor(
-		@InjectModel(Movie.name) private readonly MovieModel: Model<Movie>
+		@InjectModel(Movie.name) private readonly MovieModel: Model<Movie>,
+		private readonly telegramService: TelegramService
 	) {}
 
 	async getAllMovie(searchTerm?: string) {
@@ -112,7 +114,10 @@ export class MovieService {
 
 	async update(id: string, dto: UpdateMovieDto) {
 		/* Todo: Telegram notification */
-
+		if (!dto.isSendTelegram) {
+			await this.sendNotification(dto)
+			dto.isSendTelegram = true
+		}
 		try {
 			const movie = await this.MovieModel.findByIdAndUpdate(id, dto, {
 				new: true,
@@ -142,5 +147,27 @@ export class MovieService {
 			},
 			{ new: true }
 		).exec()
+	}
+
+	async sendNotification(dto: UpdateMovieDto) {
+		// if (process.env.NODE_ENV !== 'development')
+		// 	await this.telegramService.sendPhoto(dto.poster)
+		await this.telegramService.sendPhoto(
+			'https://marketplace.canva.com/EAFTl0ixW_k/1/0/1131w/canva-black-white-minimal-alone-movie-poster-YZ-0GJ13Nc8.jpg'
+		)
+		const msg = `<strong>${dto.title}</strong>`
+
+		await this.telegramService.sendMessage(msg, {
+			reply_markup: {
+				inline_keyboard: [
+					[
+						{
+							text: 'Watch',
+							url: 'https://www.kinopoisk.ru',
+						},
+					],
+				],
+			},
+		})
 	}
 }

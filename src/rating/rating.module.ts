@@ -5,6 +5,7 @@ import { RatingController } from './rating.controller'
 import { RatingService } from './rating.service'
 import { MovieService } from 'src/movie/movie.service'
 import { Movie, MovieSchema } from 'src/movie/movie.model'
+import { TelegramService } from 'src/telegram/telegram.service'
 
 @Module({
 	imports: [
@@ -12,7 +13,7 @@ import { Movie, MovieSchema } from 'src/movie/movie.model'
 		MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }]),
 	],
 	controllers: [RatingController],
-	providers: [RatingService, MovieService],
+	providers: [RatingService, MovieService, TelegramService],
 	exports: [RatingService],
 })
 export class RatingModule {}

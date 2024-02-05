@@ -3,9 +3,12 @@ import { MovieController } from './movie.controller'
 import { MovieService } from './movie.service'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Movie, MovieSchema } from './movie.model'
+import { TelegramModule } from 'src/telegram/telegram.module'
+import { TelegramService } from 'src/telegram/telegram.service'
 
 @Module({
 	imports: [
+		TelegramModule,
 		MongooseModule.forFeature([
 			{
 				name: Movie.name,
@@ -14,6 +17,7 @@ import { Movie, MovieSchema } from './movie.model'
 		]),
 	],
 	controllers: [MovieController],
-	providers: [MovieService],
+	providers: [MovieService, TelegramService],
+	exports: [MovieService],
 })
 export class MovieModule {}
