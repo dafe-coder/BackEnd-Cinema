@@ -7,11 +7,12 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { getMongoConfig } from 'config/mongo.config'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
-import { GenreModule } from './genre/genre.module';
-import { FileModule } from './file/file.module';
-import { ActorModule } from './actor/actor.module';
-import { MovieModule } from './movie/movie.module';
-import { RatingModule } from './rating/rating.module';
+import { GenreModule } from './genre/genre.module'
+import { FileModule } from './file/file.module'
+import { ActorModule } from './actor/actor.module'
+import { MovieModule } from './movie/movie.module'
+import { RatingModule } from './rating/rating.module'
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { RatingModule } from './rating/rating.module';
 		ActorModule,
 		MovieModule,
 		RatingModule,
+		TelegramModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

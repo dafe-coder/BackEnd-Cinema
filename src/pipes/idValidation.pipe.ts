@@ -12,7 +12,7 @@ export class IdValidationPipe implements PipeTransform {
 		}
 
 		if (!Types.ObjectId.isValid(value))
-			throw new BadRequestException('Invalid ID  format')
+			throw new BadRequestException('Invalid ID format')
 
 		return value
 	}

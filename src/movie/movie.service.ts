@@ -133,4 +133,14 @@ export class MovieService {
 			throw new NotFoundException('Not Found movie')
 		}
 	}
+
+	async updateRating(id: Types.ObjectId, newRating: number) {
+		return await this.MovieModel.findByIdAndUpdate(
+			id,
+			{
+				rating: Number(newRating),
+			},
+			{ new: true }
+		).exec()
+	}
 }
